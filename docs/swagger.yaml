@@ -1,0 +1,642 @@
+definitions:
+  controllers.LoginInput:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  controllers.RegisterInput:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - email
+    - name
+    - password
+    - username
+    type: object
+  controllers.orderInput:
+    properties:
+      address:
+        type: string
+      customerID:
+        type: integer
+    type: object
+  controllers.orderlineInput:
+    properties:
+      orderID:
+        type: integer
+      productID:
+        type: integer
+      quantity:
+        type: integer
+    type: object
+  controllers.productCategoryInput:
+    properties:
+      category:
+        type: string
+    type: object
+  controllers.productInput:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+      price:
+        type: string
+      product_category_ID:
+        type: integer
+    type: object
+  models.Order:
+    properties:
+      address:
+        type: string
+      created_at:
+        type: string
+      customerID:
+        type: integer
+      id:
+        type: integer
+      order_date:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  models.Orderline:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      orderID:
+        type: integer
+      productID:
+        type: integer
+      quantity:
+        type: integer
+      updated_at:
+        type: string
+    type: object
+  models.ProductCategory:
+    properties:
+      category:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: integer
+      updated_at:
+        type: string
+    type: object
+  models.Products:
+    properties:
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      price:
+        type: string
+      product_category_ID:
+        type: integer
+      updated_at:
+        type: string
+    type: object
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+paths:
+  /login:
+    post:
+      description: Logging in to get jwt token to access admin or user api by roles.
+      parameters:
+      - description: the body to login a user
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.LoginInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Login as customer.
+      tags:
+      - Auth
+  /order:
+    get:
+      description: Get a list of Order.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Order'
+            type: array
+      summary: Get all Order.
+      tags:
+      - Order
+    post:
+      description: Creating a new Order.
+      parameters:
+      - description: the body to create a new Order
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.orderInput'
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Order'
+      security:
+      - BearerToken: []
+      summary: Create New Order.
+      tags:
+      - Order
+  /order/{id}:
+    delete:
+      description: Delete a Order by id.
+      parameters:
+      - description: Order id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: boolean
+            type: object
+      security:
+      - BearerToken: []
+      summary: Delete one Order.
+      tags:
+      - Order
+    get:
+      description: Get an Order by id.
+      parameters:
+      - description: Order id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Order'
+      summary: Get Order.
+      tags:
+      - Order
+    patch:
+      description: Update Order by id.
+      parameters:
+      - description: Order id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: the body to update order
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.orderInput'
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Order'
+      security:
+      - BearerToken: []
+      summary: Update Order.
+      tags:
+      - Order
+  /order/{id}/orderline:
+    get:
+      description: Get all Orderline by OrderId.
+      parameters:
+      - description: Order id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Orderline'
+            type: array
+      summary: Get Orderline.
+      tags:
+      - Order
+  /orderline:
+    get:
+      description: Get a list of Orderline.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Orderline'
+            type: array
+      summary: Get all Orderline.
+      tags:
+      - Orderline
+    post:
+      description: Creating a new Orderline.
+      parameters:
+      - description: the body to create a new Orderline
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.orderlineInput'
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Orderline'
+      security:
+      - BearerToken: []
+      summary: Create New Orderline.
+      tags:
+      - Orderline
+  /orderline/{id}:
+    delete:
+      description: Delete a Orderline by id.
+      parameters:
+      - description: Orderline id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: boolean
+            type: object
+      security:
+      - BearerToken: []
+      summary: Delete one Orderline.
+      tags:
+      - Orderline
+    get:
+      description: Get an Orderline by id.
+      parameters:
+      - description: Orderline id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Orderline'
+      summary: Get Orderline.
+      tags:
+      - Orderline
+    patch:
+      description: Update Orderline by id.
+      parameters:
+      - description: Orderline id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: the body to update age rating category
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.orderlineInput'
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Orderline'
+      security:
+      - BearerToken: []
+      summary: Update Orderline.
+      tags:
+      - Orderline
+  /product:
+    get:
+      description: Get a list of Product.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Products'
+            type: array
+      summary: Get all Product.
+      tags:
+      - Product
+    post:
+      description: Creating a new Product.
+      parameters:
+      - description: the body to create a new Product
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.productInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Products'
+      summary: Create New Product.
+      tags:
+      - Product
+  /product-categories:
+    get:
+      description: Get a list of ProductCategory.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.ProductCategory'
+            type: array
+      summary: Get all ProductCategory.
+      tags:
+      - ProductCategory
+    post:
+      description: Creating a new ProductCategory.
+      parameters:
+      - description: the body to create a new ProductCategory
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.productCategoryInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ProductCategory'
+      summary: Create New ProductCategory.
+      tags:
+      - ProductCategory
+  /product-categories/{id}:
+    delete:
+      description: Delete a ProductCategory by id.
+      parameters:
+      - description: ProductCategory id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: boolean
+            type: object
+      summary: Delete one ProductCategory.
+      tags:
+      - ProductCategory
+    get:
+      description: Get an ProductCategory by id.
+      parameters:
+      - description: ProductCategory id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ProductCategory'
+      summary: Get ProductCategory.
+      tags:
+      - ProductCategory
+    patch:
+      description: Update ProductCategory by id.
+      parameters:
+      - description: ProductCategory id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: the body to update product category
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.productCategoryInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ProductCategory'
+      summary: Update ProductCategory.
+      tags:
+      - ProductCategory
+  /product-categories/{id}/product:
+    get:
+      description: Get all Product by ProductCategoryId.
+      parameters:
+      - description: ProductCategory id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Products'
+            type: array
+      summary: Get Product.
+      tags:
+      - ProductCategory
+  /product/{id}:
+    delete:
+      description: Delete a Product by id.
+      parameters:
+      - description: Product id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: boolean
+            type: object
+      summary: Delete one Product.
+      tags:
+      - Product
+    get:
+      description: Get an Product by id.
+      parameters:
+      - description: Product id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Products'
+      summary: Get Product.
+      tags:
+      - Product
+    patch:
+      description: Update Product by id.
+      parameters:
+      - description: Product id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: the body to update age rating category
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.productInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Products'
+      summary: Update Product.
+      tags:
+      - Product
+  /register:
+    post:
+      description: registering a user from public access.
+      parameters:
+      - description: the body to register a user
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.RegisterInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Register a customer.
+      tags:
+      - Auth
+swagger: "2.0"
